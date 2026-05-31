@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose'
 
 export interface IVehicle extends Document {
   number:       string; type: 'bus' | 'van' | 'car'
-  model:        string; year: number; capacity: number
+  vehicleModel: string; year: number; capacity: number
   driverId?:    mongoose.Types.ObjectId; driverName?: string; driverPhone?: string
   helper?:      string; helperPhone?: string
   insurance:    { policyNo: string; validUntil: Date; company: string }
@@ -15,7 +15,7 @@ export interface IVehicle extends Document {
 const vehicleSchema = new Schema<IVehicle>({
   number:   { type: String, required: true, unique: true },
   type:     { type: String, enum: ['bus','van','car'], default: 'bus' },
-  model:    { type: String, required: true }, year: Number, capacity: { type: Number, required: true },
+  vehicleModel: { type: String }, year: Number, capacity: { type: Number, required: true },
   driverId: { type: Schema.Types.ObjectId, ref: 'User' }, driverName: String, driverPhone: String,
   helper: String, helperPhone: String,
   insurance: { policyNo: String, validUntil: Date, company: String },

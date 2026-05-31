@@ -65,7 +65,7 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: (_, ret) => {
+      transform: (_: any, ret: any) => {
         delete ret.password
         delete ret.totpSecret
         delete ret.emailVerifyToken

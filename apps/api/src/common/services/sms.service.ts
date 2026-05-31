@@ -1,7 +1,7 @@
 import twilio from 'twilio'
 
 export class SMSService {
-  private client: twilio.Twilio
+  private client!: twilio.Twilio
   private from: string
   private whatsappFrom: string
   private enabled: boolean

@@ -50,7 +50,7 @@ export class AuthController {
 
   async verifyEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      await authService.verifyEmail(req.params.token)
+      await authService.verifyEmail(req.params.token as string)
       res.json({ success: true, message: 'Email verified successfully.' })
     } catch (err) { next(err) }
   }
@@ -106,7 +106,7 @@ export class AuthController {
 
   async revokeSession(req: Request, res: Response, next: NextFunction) {
     try {
-      await authService.revokeSession((req as any).user.id, req.params.id)
+      await authService.revokeSession((req as any).user.id, req.params.id as string)
       res.json({ success: true, message: 'Session revoked.' })
     } catch (err) { next(err) }
   }
