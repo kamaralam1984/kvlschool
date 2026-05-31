@@ -7,7 +7,8 @@ import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react'
 
 export const metadata: Metadata = { title: 'News Article', description: 'KVL International School news article.' }
 
-export default function NewsArticlePage({ params }: { params: { slug: string } }) {
+export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   return (
     <>
       <Header />
