@@ -4,16 +4,16 @@ import Link from 'next/link'
 import { TrendingUp, TrendingDown, Wallet, AlertCircle, ArrowRight, CreditCard, Users, FileText, Receipt, DollarSign, BarChart2, PiggyBank, BookOpen } from 'lucide-react'
 
 const TRANSACTIONS = [
-  { id: '1', description: 'Tuition Fee – Class 10A', amount: 1,82,000, type: 'income', date: '2025-05-30', category: 'Tuition' },
-  { id: '2', description: 'Staff Salary – May 2025', amount: 4,85,000, type: 'expense', date: '2025-05-29', category: 'Salary' },
-  { id: '3', description: 'Transport Fee Collection', amount: 56,500, type: 'income', date: '2025-05-28', category: 'Transport' },
-  { id: '4', description: 'Electricity Bill – May', amount: 38,200, type: 'expense', date: '2025-05-27', category: 'Utilities' },
-  { id: '5', description: 'Hostel Fee – Class 11 & 12', amount: 2,40,000, type: 'income', date: '2025-05-26', category: 'Hostel' },
-  { id: '6', description: 'Lab Equipment Purchase', amount: 75,000, type: 'expense', date: '2025-05-25', category: 'Supplies' },
-  { id: '7', description: 'Exam Fee Collection', amount: 92,000, type: 'income', date: '2025-05-24', category: 'Exam' },
-  { id: '8', description: 'Annual Day Event Expenses', amount: 1,20,000, type: 'expense', date: '2025-05-23', category: 'Events' },
-  { id: '9', description: 'Tuition Fee – Class 9B', amount: 1,65,000, type: 'income', date: '2025-05-22', category: 'Tuition' },
-  { id: '10', description: 'Building Maintenance', amount: 45,000, type: 'expense', date: '2025-05-21', category: 'Maintenance' },
+  { id: '1', description: 'Tuition Fee – Class 10A', amount: 182000, type: 'income', date: '2025-05-30', category: 'Tuition' },
+  { id: '2', description: 'Staff Salary – May 2025', amount: 485000, type: 'expense', date: '2025-05-29', category: 'Salary' },
+  { id: '3', description: 'Transport Fee Collection', amount: 56500, type: 'income', date: '2025-05-28', category: 'Transport' },
+  { id: '4', description: 'Electricity Bill – May', amount: 38200, type: 'expense', date: '2025-05-27', category: 'Utilities' },
+  { id: '5', description: 'Hostel Fee – Class 11 & 12', amount: 240000, type: 'income', date: '2025-05-26', category: 'Hostel' },
+  { id: '6', description: 'Lab Equipment Purchase', amount: 75000, type: 'expense', date: '2025-05-25', category: 'Supplies' },
+  { id: '7', description: 'Exam Fee Collection', amount: 92000, type: 'income', date: '2025-05-24', category: 'Exam' },
+  { id: '8', description: 'Annual Day Event Expenses', amount: 120000, type: 'expense', date: '2025-05-23', category: 'Events' },
+  { id: '9', description: 'Tuition Fee – Class 9B', amount: 165000, type: 'income', date: '2025-05-22', category: 'Tuition' },
+  { id: '10', description: 'Building Maintenance', amount: 45000, type: 'expense', date: '2025-05-21', category: 'Maintenance' },
 ]
 
 const MONTHLY = [
