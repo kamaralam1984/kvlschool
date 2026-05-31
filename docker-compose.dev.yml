@@ -1,0 +1,133 @@
+version: '3.9'
+
+# ─── Development Docker Compose ────────────────────────────
+# Runs only infrastructure services (DB, Redis).
+# Start Next.js apps and API with: npm run dev
+#
+# Usage:
+#   docker-compose -f docker-compose.dev.yml up -d
+#   npm run dev   (from repo root, starts all apps with Turbo)
+# ───────────────────────────────────────────────────────────
+
+services:
+  # ─── MongoDB ───────────────────────────────────────────
+  mongodb:
+    image: mongo:7.0
+    container_name: school_mongodb_dev
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: school_admin
+      MONGO_INITDB_ROOT_PASSWORD: school_password
+      MONGO_INITDB_DATABASE: school_ecosystem
+    volumes:
+      - mongodb_dev_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - school_dev_network
+
+  # ─── PostgreSQL ────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: school_postgres_dev
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: school_ecosystem
+      POSTGRES_USER: school_admin
+      POSTGRES_PASSWORD: school_password
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./docker/postgres-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - school_dev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U school_admin -d school_ecosystem"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redis ─────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    container_name: school_redis_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass school_redis_pass --appendonly yes
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - school_dev_network
+
+  # ─── Redis Commander (GUI) ─────────────────────────────
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: school_redis_ui
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: "local:redis:6379:0:school_redis_pass"
+    depends_on:
+      - redis
+    networks:
+      - school_dev_network
+
+  # ─── Mongo Express (GUI) ───────────────────────────────
+  mongo-express:
+    image: mongo-express:latest
+    container_name: school_mongo_ui
+    restart: unless-stopped
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: school_admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: school_password
+      ME_CONFIG_MONGODB_URL: mongodb://school_admin:school_password@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: kvl_admin_2025
+    depends_on:
+      - mongodb
+    networks:
+      - school_dev_network
+
+  # ─── pgAdmin (GUI) ─────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: school_pgadmin
+    restart: unless-stopped
+    ports:
+      - "8083:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@kvlschool.edu.in
+      PGADMIN_DEFAULT_PASSWORD: kvl_admin_2025
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - school_dev_network
+
+  # ─── Mailhog (Email testing) ───────────────────────────
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: school_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+    networks:
+      - school_dev_network
+
+volumes:
+  mongodb_dev_data:
+  postgres_dev_data:
+  redis_dev_data:
+  pgadmin_data:
+
+networks:
+  school_dev_network:
+    driver: bridge

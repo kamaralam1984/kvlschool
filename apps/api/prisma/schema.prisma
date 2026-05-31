@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AttendanceRecord {
+  id          String           @id @default(cuid())
+  studentId   String
+  studentName String
+  class       String
+  section     String
+  date        DateTime         @db.Date
+  status      AttendanceStatus
+  markedBy    String
+  remarks     String?
+  createdAt   DateTime         @default(now())
+
+  @@unique([studentId, date])
+  @@index([class, section, date])
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LEAVE
+  HOLIDAY
+}
+
+model FeePayment {
+  id              String    @id @default(cuid())
+  studentId       String
+  studentName     String
+  class           String
+  feeType         String
+  amount          Decimal   @db.Decimal(10, 2)
+  paidAmount      Decimal   @db.Decimal(10, 2)
+  dueDate         DateTime  @db.Date
+  paidDate        DateTime?
+  status          FeeStatus @default(PENDING)
+  paymentMode     String?
+  transactionId   String?   @unique
+  razorpayOrderId String?
+  receipt         String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([studentId])
+  @@index([status])
+}
+
+enum FeeStatus {
+  PENDING
+  PAID
+  OVERDUE
+  PARTIAL
+  WAIVED
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  category    String
+  description String
+  amount      Decimal  @db.Decimal(10, 2)
+  vendor      String?
+  approvedBy  String?
+  status      String   @default("pending")
+  date        DateTime @db.Date
+  receipt     String?
+  createdAt   DateTime @default(now())
+
+  @@index([category, date])
+}
+
+model TimetableSlot {
+  id          String  @id @default(cuid())
+  class       String
+  section     String
+  day         String
+  period      Int
+  startTime   String
+  endTime     String
+  subject     String
+  teacherId   String
+  teacherName String
+  room        String?
+
+  @@unique([class, section, day, period])
+}
+
+model ExamResult {
+  id            String    @id @default(cuid())
+  studentId     String
+  studentName   String
+  examId        String
+  examName      String
+  class         String
+  subject       String
+  maxMarks      Int
+  obtainedMarks Int
+  grade         String
+  percentage    Decimal   @db.Decimal(5, 2)
+  rank          Int?
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@unique([studentId, examId, subject])
+  @@index([examId])
+}
+
+model Notification {
+  id              String   @id @default(cuid())
+  title           String
+  body            String   @db.Text
+  audience        String
+  priority        String   @default("normal")
+  channel         String
+  sentBy          String
+  readCount       Int      @default(0)
+  totalRecipients Int      @default(0)
+  sentAt          DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  userName   String
+  action     String
+  resource   String
+  resourceId String?
+  details    Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
